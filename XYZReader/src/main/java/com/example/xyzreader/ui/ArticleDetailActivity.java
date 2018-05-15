@@ -1,24 +1,33 @@
 package com.example.xyzreader.ui;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.LoaderManager;
-import android.content.Loader;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.widget.ImageView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
+import com.example.xyzreader.views.ThreeTwoImageVIew;
 
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
@@ -36,7 +45,10 @@ public class ArticleDetailActivity extends AppCompatActivity
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
     //private View mUpButtonContainer;
+    private Toolbar mToolbar;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private View mUpButton;
+    private ThreeTwoImageVIew photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,45 +61,85 @@ public class ArticleDetailActivity extends AppCompatActivity
         }*/
         setContentView(R.layout.activity_article_detail);
 
-        getLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, this);
 
-        mPagerAdapter = new MyPagerAdapter(getFragmentManager());
+        mToolbar = findViewById(R.id.toolbar);
+
+        collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
+        setSupportActionBar(mToolbar);
+
+        photo = findViewById(R.id.photo);
+        mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager = findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageMargin((int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
+                Log.d("foo", "onPageScrollStateChanged: ");
                 // TODO: 08/05/2018 --> add the animation to the default back button and to the image
                 // or the button inside of the
-                /*mUpButton.animate()
+                mUpButton.animate()
                         .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
-                        .setDuration(300);*/
+                        .setDuration(300);
+                photo.animate()
+                        .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
+                        .setDuration(300);
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 if (mCursor != null) {
                     mCursor.moveToPosition(position);
+
+                // updateUpButtonPosition();
+
+
+                // TODO: 13/05/2018 -> test to load the image from activity
+                    Log.d("foo", "onPageSelected: " + mCursor.getString(ArticleLoader.Query.TITLE));
+                //getSupportActionBar().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+                collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+                ImageLoaderHelper.getInstance(ArticleDetailActivity.this).getImageLoader()
+                        .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
+                            @Override
+                            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                                Bitmap bitmap = imageContainer.getBitmap();
+                                Log.d("foo", "onResponse: " + position);
+                                if (bitmap != null) {
+                                    Palette p = Palette.generate(bitmap, 12);
+                                    //mMutedColor = p.getDarkMutedColor(0xFF333333);
+                                    photo.setImageBitmap(imageContainer.getBitmap());
+                                    // TODO: 13/05/2018 -> add the interface here to set the picture on avticity image view
+                            /*mRootView.findViewById(R.id.meta_bar)
+                                    .setBackgroundColor(mMutedColor);
+                            updateStatusBar();*/
+                                }
+                            }
+
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+
+                            }
+                        });
+
+                // TODO: 13/05/2018 -> end test to load the image from activity
                 }
                 mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
-               // updateUpButtonPosition();
             }
         });
-
         //mUpButtonContainer = findViewById(R.id.up_container);
 
-        /*mUpButton = findViewById(R.id.action_up);
+        mUpButton = findViewById(R.id.action_up);
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSupportNavigateUp();
             }
-        });*/
+        });
 
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mUpButtonContainer.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
