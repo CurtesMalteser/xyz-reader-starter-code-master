@@ -163,6 +163,12 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
     private void updateStatusBar() {
         int color = 0;
         /*if (mPhotoView != null && mTopInset != 0 && mScrollY > 0) {

@@ -6,7 +6,5 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/dimen_16dp"
     android:layout_marginRight="@dimen/dimen_16dp"
-    android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
-    android:paddingBottom="@dimen/dimen_16dp"
-    android:paddingTop="@dimen/dimen_16dp"
+    android:autoLink="web"
     android:textColorLink="@color/theme_accent" />

@@ -1,9 +1,12 @@
 package com.example.xyzreader.ui;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -77,12 +80,16 @@ public class ArticleDetailActivity extends AppCompatActivity
         mPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
         mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (position == 0 && positionOffset == 0.0) setActivityUI(position);
+            }
+
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-                Log.d("foo", "onPageScrollStateChanged: ");
-                // TODO: 08/05/2018 --> add the animation to the default back button and to the image
-                // or the button inside of the
                 mUpButton.animate()
                         .alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
                         .setDuration(300);
@@ -93,42 +100,7 @@ public class ArticleDetailActivity extends AppCompatActivity
 
             @Override
             public void onPageSelected(final int position) {
-                if (mCursor != null) {
-                    mCursor.moveToPosition(position);
-
-                // updateUpButtonPosition();
-
-
-                // TODO: 13/05/2018 -> test to load the image from activity
-                    Log.d("foo", "onPageSelected: " + mCursor.getString(ArticleLoader.Query.TITLE));
-                //getSupportActionBar().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-                collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-                ImageLoaderHelper.getInstance(ArticleDetailActivity.this).getImageLoader()
-                        .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
-                            @Override
-                            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                                Bitmap bitmap = imageContainer.getBitmap();
-                                Log.d("foo", "onResponse: " + position);
-                                if (bitmap != null) {
-                                    Palette p = Palette.generate(bitmap, 12);
-                                    //mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                    photo.setImageBitmap(imageContainer.getBitmap());
-                                    // TODO: 13/05/2018 -> add the interface here to set the picture on avticity image view
-                            /*mRootView.findViewById(R.id.meta_bar)
-                                    .setBackgroundColor(mMutedColor);
-                            updateStatusBar();*/
-                                }
-                            }
-
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-
-                            }
-                        });
-
-                // TODO: 13/05/2018 -> end test to load the image from activity
-                }
-                mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
+                setActivityUI(position);
             }
         });
         //mUpButtonContainer = findViewById(R.id.up_container);
@@ -159,6 +131,85 @@ public class ArticleDetailActivity extends AppCompatActivity
                 mStartId = ItemsContract.Items.getItemId(getIntent().getData());
                 mSelectedItemId = mStartId;
             }
+        }
+    }
+
+    private void setActivityUI(int position) {
+        if (mCursor != null) {
+            mCursor.moveToPosition(position);
+
+
+            // TODO: 13/05/2018 -> test to load the image from activity
+            Log.d("foo", "onPageSelected: " + mCursor.getString(ArticleLoader.Query.TITLE));
+            //getSupportActionBar().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+            collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+            ImageLoaderHelper.getInstance(ArticleDetailActivity.this).getImageLoader()
+                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                            Bitmap bitmap = imageContainer.getBitmap();
+                            if (bitmap != null) {
+                                Palette p = Palette.from(bitmap).generate();
+
+                                Palette.Swatch statusBarColor = p.getDarkVibrantSwatch();
+
+                                // Load default colors
+                                int backgroundColor = ContextCompat.getColor(ArticleDetailActivity.this,
+                                        R.color.theme_primary);
+                                int textColor = ContextCompat.getColor(ArticleDetailActivity.this,
+                                        R.color.text_color_primary);
+
+                                // Check that the Vibrant swatch is available
+                                if (statusBarColor != null) {
+                                    if (Build.VERSION.SDK_INT >= 21)
+                                        getWindow().setStatusBarColor(statusBarColor.getRgb());
+                                    textColor = statusBarColor.getBodyTextColor();
+                                } else {
+                                    if (Build.VERSION.SDK_INT >= 21)
+                                        getWindow().setStatusBarColor(ContextCompat.getColor(ArticleDetailActivity.this,
+                                                R.color.theme_primary_dark));
+                                }
+
+                                Palette.Swatch colorSwatch = p.getVibrantSwatch();
+
+                                if (colorSwatch != null) {
+                                    //mToolbar.setBackgroundColor(colorSwatch.getRgb());
+                                    collapsingToolbarLayout.setBackgroundColor(colorSwatch.getRgb());
+                                    collapsingToolbarLayout.setStatusBarScrimColor(colorSwatch.getRgb());
+                                    collapsingToolbarLayout.setContentScrimColor(colorSwatch.getRgb());
+                                } else {
+                                /*mToolbar.setBackgroundColor(ContextCompat.getColor(ArticleDetailActivity.this,
+                                        R.color.theme_primary));*/
+                                    collapsingToolbarLayout.setBackgroundColor(ContextCompat.getColor(ArticleDetailActivity.this,
+                                            R.color.theme_primary));
+                                    collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(ArticleDetailActivity.this,
+                                            R.color.theme_primary));
+                                    collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(ArticleDetailActivity.this,
+                                            R.color.theme_primary));
+                                }
+
+                                collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(ArticleDetailActivity.this,
+                                        android.R.color.transparent));
+
+                                //mMutedColor = p.getDarkMutedColor(0xFF333333);
+                                photo.setImageBitmap(imageContainer.getBitmap());
+
+                                // TODO: 13/05/2018 -> add the interface here to set the picture on avticity image view
+                    /*mRootView.findViewById(R.id.meta_bar)
+                            .setBackgroundColor(mMutedColor);
+                    updateStatusBar();*/
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+
+                        }
+                    });
+
+            // TODO: 13/05/2018 -> end test to load the image from activity
         }
     }
 

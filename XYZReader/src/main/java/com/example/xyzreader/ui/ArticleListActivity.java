@@ -1,15 +1,19 @@
 package com.example.xyzreader.ui;
 
+import android.graphics.Bitmap;
 import android.support.v4.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
@@ -50,7 +56,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
-    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2, 1, 1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +168,7 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
@@ -178,13 +184,48 @@ public class ArticleListActivity extends AppCompatActivity implements
             } else {
                 holder.subtitleView.setText(Html.fromHtml(
                         outputFormat.format(publishedDate)
-                        + "<br/>" + " by "
-                        + mCursor.getString(ArticleLoader.Query.AUTHOR)));
+                                + "<br/>" + " by "
+                                + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
+
             holder.thumbnailView.setImageUrl(
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
                     ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+
+            ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader()
+                    .get(mCursor.getString(ArticleLoader.Query.THUMB_URL), new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                            Bitmap bitmap = imageContainer.getBitmap();
+                            if (bitmap != null) {
+                                Palette p = Palette.from(bitmap).generate();
+                                Palette.Swatch colorSwatch = p.getVibrantSwatch();
+
+                                // Load default colors
+                                int backgroundColor = ContextCompat.getColor(ArticleListActivity.this,
+                                        R.color.theme_primary);
+                                int textColor = ContextCompat.getColor(ArticleListActivity.this,
+                                        R.color.text_color_primary);
+
+                                // Check that the Vibrant swatch is available
+                                if (colorSwatch != null) {
+                                    backgroundColor = colorSwatch.getRgb();
+                                    textColor = colorSwatch.getBodyTextColor();
+                                }
+
+                                // Set the toolbar background and text colors
+                                holder.cardView.setCardBackgroundColor(backgroundColor);
+                                holder.subtitleView.setTextColor(textColor);
+
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+
+                        }
+                    });
         }
 
         @Override
@@ -194,6 +235,7 @@ public class ArticleListActivity extends AppCompatActivity implements
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public CardView cardView;
         public DynamicHeightNetworkImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
@@ -203,6 +245,15 @@ public class ArticleListActivity extends AppCompatActivity implements
             thumbnailView = view.findViewById(R.id.thumbnail);
             titleView = view.findViewById(R.id.article_title);
             subtitleView = view.findViewById(R.id.article_subtitle);
+            cardView = view.findViewById(R.id.card_view);
         }
+    }
+
+    public void createPaletteAsync(Bitmap bitmap) {
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            public void onGenerated(Palette p) {
+                // Use generated instance
+            }
+        });
     }
 }

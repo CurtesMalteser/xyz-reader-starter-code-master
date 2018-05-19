@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,6 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
     public ArticleBodyAdapter.ArticleBodyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.article_row, viewGroup, false);
-        Log.d("foo", "onCreateViewHolder: ");
         return new ArticleBodyAdapter.ArticleBodyViewHolder(view);
     }
 
@@ -52,9 +52,7 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
         }
 
         void bind(int listIndex) {
-            String model = mBodyText[listIndex];
-
-            articleParagraph.setText(model);
+            articleParagraph.setText(Html.fromHtml(mBodyText[listIndex]));
         }
     }
 }

@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:toolbarId="@+id/toolbar">
 
             <com.example.xyzreader.views.ThreeTwoImageVIew
@@ -37,9 +37,10 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="@string/app_name">
 
-                <ImageButton
+               <ImageButton
                     android:id="@+id/action_up"
                     android:layout_width="56dp"
                     android:layout_height="?actionBarSize"
