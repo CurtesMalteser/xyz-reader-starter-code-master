@@ -1,7 +1,5 @@
 package com.example.xyzreader.ui;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,15 +20,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
-import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
-import com.example.xyzreader.views.ThreeTwoImageVIew;
+import com.example.xyzreader.views.CurtesMalteserImageVIew;
 
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
@@ -51,7 +47,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private View mUpButton;
-    private ThreeTwoImageVIew photo;
+    private CurtesMalteserImageVIew photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

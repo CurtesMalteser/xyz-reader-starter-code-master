@@ -130,7 +130,7 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });*/
 
-        mScrollView = mRootView.findViewById(R.id.scrollview);
+       /* mScrollView = mRootView.findViewById(R.id.scrollview);
         mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
             @Override
             public void onScrollChanged() {
@@ -140,7 +140,7 @@ public class ArticleDetailFragment extends Fragment implements
 //                mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
                 updateStatusBar();
             }
-        });
+        });*/
 
         //mPhotoView = mRootView.findViewById(R.id.photo);
        // mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
@@ -249,7 +249,7 @@ public class ArticleDetailFragment extends Fragment implements
 
             }
 
-            String[] test = mCursor.getString(ArticleLoader.Query.BODY).split("\r\n|\n");
+            String[] test = mCursor.getString(ArticleLoader.Query.BODY).split("\r\n\r\n");
 
             // TODO: 15/05/2018 -> Check the TextView row padding
             ArticleBodyAdapter adapter = new ArticleBodyAdapter(test);
