@@ -60,7 +60,7 @@
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:behavior_overlapTop= "300dp"
+            app:behavior_overlapTop="0dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -70,7 +70,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
+        android:src="@drawable/ic_share"/>
 
 </android.support.design.widget.CoordinatorLayout>
