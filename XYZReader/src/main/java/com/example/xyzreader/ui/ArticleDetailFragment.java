@@ -13,9 +13,11 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -95,6 +97,11 @@ public class ArticleDetailFragment extends Fragment implements
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
+        if (getArguments().containsKey("edttext")) {
+            String strtext = getArguments().getString("edttext");
+            Log.d(TAG, "onCreate: " + strtext);
+        }
+
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
@@ -143,7 +150,7 @@ public class ArticleDetailFragment extends Fragment implements
         });*/
 
         //mPhotoView = mRootView.findViewById(R.id.photo);
-       // mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+        // mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
@@ -215,7 +222,7 @@ public class ArticleDetailFragment extends Fragment implements
         }
 
         TextView titleView = mRootView.findViewById(R.id.article_title);
-       // TextView bylineView = mRootView.findViewById(R.id.article_byline);
+        // TextView bylineView = mRootView.findViewById(R.id.article_byline);
         //bylineView.setMovementMethod(new LinkMovementMethod());
         RecyclerView recyclerView = mRootView.findViewById(R.id.recycler_view_article_body);
         //TextView bodyView = mRootView.findViewById(R.id.article_body);
@@ -223,36 +230,42 @@ public class ArticleDetailFragment extends Fragment implements
 
         //bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
+        ArrayList<String> myText = new ArrayList<>();
+
+
         if (mCursor != null) {
+            myText.add(mCursor.getString(ArticleLoader.Query.TITLE));
             mRootView.setAlpha(0);
             mRootView.setVisibility(View.VISIBLE);
             mRootView.animate().alpha(1);
-//            titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
-
+            //titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             Date publishedDate = parsePublishedDate();
             if (!publishedDate.before(START_OF_EPOCH.getTime())) {
-                /*bylineView.setText(Html.fromHtml(
+                myText.add(
                         DateUtils.getRelativeTimeSpanString(
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()
                                 + " by <font color='#ffffff'>"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)
-                                + "</font>"));
-*/
+                                + "</font>");
+
             } else {
                 // If date is before 1902, just show the string
-              /*  bylineView.setText(Html.fromHtml(
+                myText.add(
                         outputFormat.format(publishedDate) + " by <font color='#ffffff'>"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)
-                                + "</font>"));
-*/
+                                + "</font>");
             }
 
             String[] test = mCursor.getString(ArticleLoader.Query.BODY).split("\r\n\r\n");
+            myText.addAll(Arrays.asList(test));
+
+            Log.d(TAG, "bindViews: " + myText.size());
+
 
             // TODO: 15/05/2018 -> Check the TextView row padding
-            ArticleBodyAdapter adapter = new ArticleBodyAdapter(test);
+            ArticleBodyAdapter adapter = new ArticleBodyAdapter(myText);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);

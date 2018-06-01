@@ -26,7 +26,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
-import com.example.xyzreader.views.CurtesMalteserImageVIew;
+import com.example.xyzreader.views.CurtesMalteserImageView;
 
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
@@ -47,7 +47,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private View mUpButton;
-    private CurtesMalteserImageVIew photo;
+    private CurtesMalteserImageView photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,6 +263,9 @@ public class ArticleDetailActivity extends AppCompatActivity
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
             ArticleDetailFragment fragment = (ArticleDetailFragment) object;
+            Bundle bundle = new Bundle();
+            bundle.putString("edttext", "From Activity");
+            fragment.setArguments(bundle);
             if (fragment != null) {
                 mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
                 //updateUpButtonPosition();

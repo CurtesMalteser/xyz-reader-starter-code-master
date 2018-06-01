@@ -11,29 +11,29 @@ import com.example.xyzreader.R;
  * Created by António "Curtes Malteser" Bastião on 12/05/2018.
  */
 
-public class CurtesMalteserImageVIew extends android.support.v7.widget.AppCompatImageView {
+public class CurtesMalteserImageView extends android.support.v7.widget.AppCompatImageView {
 
     private String aspectRatio = "";
 
-    public CurtesMalteserImageVIew(Context context) {
+    public CurtesMalteserImageView(Context context) {
         super(context);
     }
 
-    public CurtesMalteserImageVIew(Context context, @Nullable AttributeSet attrs) {
+    public CurtesMalteserImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.CurtesMalteserImageVIew,
+                R.styleable.CurtesMalteserImageView,
                 0, 0);
         try {
-            aspectRatio = a.getString(R.styleable.CurtesMalteserImageVIew_aspect_ratio);
+            aspectRatio = a.getString(R.styleable.CurtesMalteserImageView_aspect_ratio);
         } finally {
             a.recycle();
         }
     }
 
-    public CurtesMalteserImageVIew(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CurtesMalteserImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

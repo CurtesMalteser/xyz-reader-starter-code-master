@@ -4,7 +4,7 @@
         <attr name="insetBackground" format="color|reference" />
     </declare-styleable>
 
-    <declare-styleable name="CurtesMalteserImageVIew">
+    <declare-styleable name="CurtesMalteserImageView">
         <attr name="aspect_ratio" format="string" localization="suggested"  />
     </declare-styleable>
 </resources>
