@@ -94,16 +94,12 @@
              android:background="@android:color/white"
              android:layout_width="0dp"
              android:layout_height="0dp"
-             app:layout_constraintWidth_max="600dp"
+             app:layout_constraintWidth_max="@dimen/detail_card_max_width"
              app:layout_constraintBottom_toBottomOf="parent"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent"
-             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-             android:layout_marginLeft="@dimen/dimen_16dp"
-             android:layout_marginRight="@dimen/dimen_16dp"
-             android:paddingBottom="@dimen/dimen_16dp"
-             android:paddingTop="@dimen/dimen_16dp" />
+             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <!-- </com.example.xyzreader.ui.MaxWidthLinearLayout>
  </android.support.v4.widget.NestedScrollView>-->

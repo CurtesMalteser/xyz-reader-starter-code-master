@@ -1,10 +1,12 @@
 package com.example.xyzreader.ui;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
@@ -69,6 +72,8 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
 
+    private HashMap<String, Integer> mColorsMap;
+
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
     // Use default locale format
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
@@ -97,11 +102,8 @@ public class ArticleDetailFragment extends Fragment implements
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
-        if (getArguments().containsKey("edttext")) {
-            String strtext = getArguments().getString("edttext");
-            Log.d(TAG, "onCreate: " + strtext);
-        }
 
+        mColorsMap = new HashMap<>();
 
         mIsCard = getResources().getBoolean(R.bool.detail_is_card);
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
@@ -128,6 +130,8 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+
+
      /*   mDrawInsetsFrameLayout =
                 mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
@@ -173,7 +177,6 @@ public class ArticleDetailFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: ");
     }
 
     private void updateStatusBar() {
@@ -261,11 +264,41 @@ public class ArticleDetailFragment extends Fragment implements
             String[] test = mCursor.getString(ArticleLoader.Query.BODY).split("\r\n\r\n");
             myText.addAll(Arrays.asList(test));
 
-            Log.d(TAG, "bindViews: " + myText.size());
+            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
+                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
+                        @Override
+                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                            Bitmap bitmap = imageContainer.getBitmap();
+                            if (bitmap != null) {
+                                Palette p = Palette.from(bitmap).generate();
+
+                                Palette.Swatch colorSwatch = p.getVibrantSwatch();
+
+                                if (colorSwatch != null) {
+                                    mColorsMap.put(getResources().getString(R.string.toolbar_color), colorSwatch.getRgb());
+                                    mColorsMap.put(getResources().getString(R.string.title_text_color), colorSwatch.getTitleTextColor());
+                                    mColorsMap.put(getResources().getString(R.string.body_text_color), colorSwatch.getBodyTextColor());
+
+                                } else {
+                                    mColorsMap.put(getResources().getString(R.string.toolbar_color), ContextCompat.getColor(getActivity(),
+                                            R.color.theme_primary));
+                                    mColorsMap.put(getResources().getString(R.string.title_text_color), ContextCompat.getColor(getActivity(),
+                                            android.R.color.white));
+                                    mColorsMap.put(getResources().getString(R.string.body_text_color), ContextCompat.getColor(getActivity(),
+                                            R.color.text_color_primary));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+
+                        }
+                    });
 
 
             // TODO: 15/05/2018 -> Check the TextView row padding
-            ArticleBodyAdapter adapter = new ArticleBodyAdapter(myText);
+            ArticleBodyAdapter adapter = new ArticleBodyAdapter(getActivity(), myText, mColorsMap);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);

@@ -1,9 +1,11 @@
 package com.example.xyzreader.ui;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.example.xyzreader.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by António "Curtes Malteser" Bastião on 15/05/2018.
@@ -23,10 +26,14 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
     private static final int SUBTITLE = 1;
     private static final int BODY = 2;
 
+    private Context mContext;
     private ArrayList<String> mBodyText;
+    private HashMap<String, Integer> mColorsMap;
 
-    public ArticleBodyAdapter(ArrayList<String> text) {
+    public ArticleBodyAdapter(Context context, ArrayList<String> text, HashMap<String, Integer> colorsMap) {
+        this.mContext = context;
         this.mBodyText = text;
+        this.mColorsMap = colorsMap;
     }
 
     @NonNull
@@ -37,8 +44,10 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
 
         if (viewType == TITLE) {
             view = inflater.inflate(R.layout.title_layout, viewGroup, false);
+            view.setBackgroundColor(mColorsMap.get(mContext.getResources().getString(R.string.toolbar_color)));
         } else if (viewType == SUBTITLE){
             view = inflater.inflate(R.layout.subtitle_layout, viewGroup, false);
+            view.setBackgroundColor(mColorsMap.get(mContext.getResources().getString(R.string.toolbar_color)));
         }else {
             view = inflater.inflate(R.layout.article_row, viewGroup, false);
         }
@@ -83,11 +92,14 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
 
         void bind(int listIndex) {
             if (listIndex == 0) {
-                articleTitle.setText(mBodyText.get(listIndex));
+                articleTitle.setTextColor(mColorsMap.get(mContext.getResources().getString(R.string.title_text_color)));
+                articleTitle.setText(Html.fromHtml(mBodyText.get(listIndex)));
             } else if (listIndex == 1) {
+                articleByLine.setTextColor(mColorsMap.get(mContext.getResources().getString(R.string.body_text_color)));
                 articleByLine.setText(Html.fromHtml(mBodyText.get(listIndex)));
             } else {
-                articleParagraph.setText(Html.fromHtml(mBodyText.get(listIndex)));
+                articleParagraph.setMovementMethod(new LinkMovementMethod());
+                articleParagraph.setText(mBodyText.get(listIndex));
             }
         }
     }

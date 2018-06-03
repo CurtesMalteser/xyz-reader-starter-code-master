@@ -1,6 +1,8 @@
 package com.example.xyzreader.ui;
 
+import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
@@ -28,6 +30,8 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.views.CurtesMalteserImageView;
 
+import java.util.HashMap;
+
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
@@ -48,6 +52,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private View mUpButton;
     private CurtesMalteserImageView photo;
+    private FloatingActionButton fab;
+    private HashMap<String, Integer> mColorsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,11 @@ public class ArticleDetailActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
 
         photo = findViewById(R.id.photo);
+
+        fab = findViewById(R.id.fab);
+
+        mColorsMap = new HashMap<>();
+
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager = findViewById(R.id.pager);
         mPager.setAdapter(mPagerAdapter);
@@ -134,10 +145,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         if (mCursor != null) {
             mCursor.moveToPosition(position);
 
-
-            // TODO: 13/05/2018 -> test to load the image from activity
-            Log.d("foo", "onPageSelected: " + mCursor.getString(ArticleLoader.Query.TITLE));
-            //getSupportActionBar().setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             ImageLoaderHelper.getInstance(ArticleDetailActivity.this).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
@@ -173,6 +180,11 @@ public class ArticleDetailActivity extends AppCompatActivity
                                     collapsingToolbarLayout.setBackgroundColor(colorSwatch.getRgb());
                                     collapsingToolbarLayout.setStatusBarScrimColor(colorSwatch.getRgb());
                                     collapsingToolbarLayout.setContentScrimColor(colorSwatch.getRgb());
+
+                                    mColorsMap.put(getResources().getString(R.string.toolbar_color), colorSwatch.getRgb());
+                                    mColorsMap.put(getResources().getString(R.string.title_text_color), colorSwatch.getTitleTextColor());
+                                    mColorsMap.put(getResources().getString(R.string.body_text_color), colorSwatch.getBodyTextColor());
+
                                 } else {
                                 /*mToolbar.setBackgroundColor(ContextCompat.getColor(ArticleDetailActivity.this,
                                         R.color.theme_primary));*/
@@ -182,6 +194,11 @@ public class ArticleDetailActivity extends AppCompatActivity
                                             R.color.theme_primary));
                                     collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(ArticleDetailActivity.this,
                                             R.color.theme_primary));
+
+                                    mColorsMap.put(getResources().getString(R.string.toolbar_color), ContextCompat.getColor(ArticleDetailActivity.this,
+                                            R.color.theme_primary));
+                                    mColorsMap.put(getResources().getString(R.string.title_text_color), android.R.color.black);
+                                    mColorsMap.put(getResources().getString(R.string.body_text_color), android.R.color.black);
                                 }
 
                                 collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(ArticleDetailActivity.this,
@@ -189,12 +206,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
                                 //mMutedColor = p.getDarkMutedColor(0xFF333333);
                                 photo.setImageBitmap(imageContainer.getBitmap());
-
-                                // TODO: 13/05/2018 -> add the interface here to set the picture on avticity image view
-                    /*mRootView.findViewById(R.id.meta_bar)
-                            .setBackgroundColor(mMutedColor);
-                    updateStatusBar();*/
-
 
                             }
                         }
@@ -204,8 +215,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
                         }
                     });
-
-            // TODO: 13/05/2018 -> end test to load the image from activity
         }
     }
 
@@ -263,9 +272,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
             ArticleDetailFragment fragment = (ArticleDetailFragment) object;
-            Bundle bundle = new Bundle();
-            bundle.putString("edttext", "From Activity");
-            fragment.setArguments(bundle);
             if (fragment != null) {
                 mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
                 //updateUpButtonPosition();
