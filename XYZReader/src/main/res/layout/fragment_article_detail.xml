@@ -104,9 +104,9 @@
     <!-- </com.example.xyzreader.ui.MaxWidthLinearLayout>
  </android.support.v4.widget.NestedScrollView>-->
 
- <!--todo - add a fabButton-->
+ <!--todo - add a fabButton
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/share_fab"
+        android:id="@+id/fab_share"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"
@@ -117,6 +117,6 @@
         android:src="@drawable/ic_share"
         android:stateListAnimator="@anim/fab_state_list_anim"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />-->
 
 </android.support.constraint.ConstraintLayout>

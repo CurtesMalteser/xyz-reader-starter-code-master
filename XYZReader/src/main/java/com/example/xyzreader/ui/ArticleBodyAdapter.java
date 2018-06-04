@@ -93,13 +93,13 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
         void bind(int listIndex) {
             if (listIndex == 0) {
                 articleTitle.setTextColor(mColorsMap.get(mContext.getResources().getString(R.string.title_text_color)));
-                articleTitle.setText(Html.fromHtml(mBodyText.get(listIndex)));
+                articleTitle.setText(mBodyText.get(listIndex));
             } else if (listIndex == 1) {
                 articleByLine.setTextColor(mColorsMap.get(mContext.getResources().getString(R.string.body_text_color)));
                 articleByLine.setText(Html.fromHtml(mBodyText.get(listIndex)));
             } else {
                 articleParagraph.setMovementMethod(new LinkMovementMethod());
-                articleParagraph.setText(mBodyText.get(listIndex));
+                articleParagraph.setText(Html.fromHtml(mBodyText.get(listIndex)));
             }
         }
     }

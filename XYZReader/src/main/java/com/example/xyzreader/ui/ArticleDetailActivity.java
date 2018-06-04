@@ -1,11 +1,13 @@
 package com.example.xyzreader.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
@@ -52,7 +54,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private View mUpButton;
     private CurtesMalteserImageView photo;
-    private FloatingActionButton fab;
+    private FloatingActionButton mFabShare;
     private HashMap<String, Integer> mColorsMap;
 
     @Override
@@ -75,7 +77,16 @@ public class ArticleDetailActivity extends AppCompatActivity
 
         photo = findViewById(R.id.photo);
 
-        fab = findViewById(R.id.fab);
+        mFabShare = findViewById(R.id.fab_share);
+        mFabShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(ArticleDetailActivity.this)
+                        .setType("text/plain")
+                        .setText("Some sample text")
+                        .getIntent(), getString(R.string.action_share)));
+            }
+        });
 
         mColorsMap = new HashMap<>();
 

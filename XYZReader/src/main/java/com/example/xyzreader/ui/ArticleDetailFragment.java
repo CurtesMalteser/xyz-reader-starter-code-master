@@ -158,7 +158,7 @@ public class ArticleDetailFragment extends Fragment implements
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+        /*mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
@@ -166,7 +166,7 @@ public class ArticleDetailFragment extends Fragment implements
                         .setText("Some sample text")
                         .getIntent(), getString(R.string.action_share)));
             }
-        });
+        });*/
 
 
         bindViews();
@@ -249,16 +249,16 @@ public class ArticleDetailFragment extends Fragment implements
                                 publishedDate.getTime(),
                                 System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
                                 DateUtils.FORMAT_ABBREV_ALL).toString()
-                                + " by <font color='#ffffff'>"
+                                + " by <i>"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)
-                                + "</font>");
+                                + "</i>");
 
             } else {
                 // If date is before 1902, just show the string
                 myText.add(
-                        outputFormat.format(publishedDate) + " by <font color='#ffffff'>"
+                        outputFormat.format(publishedDate) + " by <i>"
                                 + mCursor.getString(ArticleLoader.Query.AUTHOR)
-                                + "</font>");
+                                + "</i>");
             }
 
             String[] test = mCursor.getString(ArticleLoader.Query.BODY).split("\r\n\r\n");
