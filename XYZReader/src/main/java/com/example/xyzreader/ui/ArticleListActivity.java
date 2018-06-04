@@ -205,18 +205,22 @@ public class ArticleListActivity extends AppCompatActivity implements
                                 // Load default colors
                                 int backgroundColor = ContextCompat.getColor(ArticleListActivity.this,
                                         R.color.theme_primary);
-                                int textColor = ContextCompat.getColor(ArticleListActivity.this,
+                                int titleTextColor = ContextCompat.getColor(ArticleListActivity.this,
+                                        android.R.color.white);
+                                int bodyTextColor = ContextCompat.getColor(ArticleListActivity.this,
                                         R.color.text_color_primary);
 
                                 // Check that the Vibrant swatch is available
                                 if (colorSwatch != null) {
                                     backgroundColor = colorSwatch.getRgb();
-                                    textColor = colorSwatch.getBodyTextColor();
+                                    titleTextColor = colorSwatch.getTitleTextColor();
+                                    bodyTextColor = colorSwatch.getBodyTextColor();
                                 }
 
                                 // Set the toolbar background and text colors
                                 holder.cardView.setCardBackgroundColor(backgroundColor);
-                                holder.subtitleView.setTextColor(textColor);
+                                holder.titleView.setTextColor(titleTextColor);
+                                holder.subtitleView.setTextColor(bodyTextColor);
 
                             }
                         }
