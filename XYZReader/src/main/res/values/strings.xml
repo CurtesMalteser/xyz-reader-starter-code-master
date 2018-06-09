@@ -18,5 +18,6 @@
     <string name="body_text_color" translatable="false">bodyTextColor</string>
     <string name="aspectThreeTwo">3:2</string>
     <string name="aspectTwentyNine">20:9</string>
+    <string name="not_available">N/A</string>
 
 </resources>

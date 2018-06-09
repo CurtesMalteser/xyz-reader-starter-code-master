@@ -13,5 +13,6 @@
     <dimen name="fab_resting_translation_z">6dp</dimen>
     <dimen name="fab_press_translation_z">12dp</dimen>
     <dimen name="buttonWidth">56dp</dimen>
+    <dimen name="dimen_24">24dp</dimen>
 
 </resources>

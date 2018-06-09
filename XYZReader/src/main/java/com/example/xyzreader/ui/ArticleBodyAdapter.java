@@ -45,10 +45,10 @@ public class ArticleBodyAdapter extends RecyclerView.Adapter<ArticleBodyAdapter.
         if (viewType == TITLE) {
             view = inflater.inflate(R.layout.title_layout, viewGroup, false);
             view.setBackgroundColor(mColorsMap.get(mContext.getResources().getString(R.string.toolbar_color)));
-        } else if (viewType == SUBTITLE){
+        } else if (viewType == SUBTITLE) {
             view = inflater.inflate(R.layout.subtitle_layout, viewGroup, false);
             view.setBackgroundColor(mColorsMap.get(mContext.getResources().getString(R.string.toolbar_color)));
-        }else {
+        } else {
             view = inflater.inflate(R.layout.article_row, viewGroup, false);
         }
 

@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
         android:paddingBottom="8dp"
-        android:paddingTop="24dp"
-        android:textColor="#fff"
+        android:paddingTop="@dimen/dimen_24"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         tools:text="This is the title" />
 
