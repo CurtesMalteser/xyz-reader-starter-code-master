@@ -6,6 +6,8 @@
     android:layout_marginRight="@dimen/dimen_4dp"
     android:layout_marginTop="@dimen/dimen_4dp"
     android:layout_marginBottom="@dimen/dimen_4dp"
+    android:elevation="@dimen/dimen_2dp"
+    android:stateListAnimator="@animator/card_state_list_anim"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground">
@@ -26,7 +28,7 @@
 
         <TextView
             android:id="@+id/article_title"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/exterior_padding"
@@ -39,12 +41,13 @@
 
         <TextView
             android:id="@+id/article_subtitle"
-            style="@style/TextAppearance.AppCompat.Subhead"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/exterior_padding"
             android:paddingRight="@dimen/exterior_padding"
             android:paddingBottom="@dimen/exterior_padding"
+            android:textColor="#6000"
             android:maxLines="2"
             android:ellipsize="end" />
     </LinearLayout>

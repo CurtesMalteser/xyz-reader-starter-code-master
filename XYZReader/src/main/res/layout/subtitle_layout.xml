@@ -4,16 +4,16 @@
     android:id="@+id/meta_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dimen_16dp"
+    android:layout_marginBottom="@dimen/exterior_padding"
     android:background="#333"
     android:orientation="vertical"
     android:paddingBottom="32dp"
-    android:paddingLeft="@dimen/detail_inner_horiz_margin"
-    android:paddingRight="@dimen/detail_inner_horiz_margin" >
+    android:paddingLeft="@dimen/exterior_padding"
+    android:paddingRight="@dimen/exterior_padding" >
 
     <TextView
         android:id="@+id/article_byline"
-        style="?android:attr/textAppearanceSmall"
+        style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#8fff"

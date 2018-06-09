@@ -16,5 +16,7 @@
     <string name="toolbar_color" translatable="false">toolbarColor</string>
     <string name="title_text_color" translatable="false">titleTextColor</string>
     <string name="body_text_color" translatable="false">bodyTextColor</string>
+    <string name="aspectThreeTwo">3:2</string>
+    <string name="aspectTwentyNine">20:9</string>
 
 </resources>

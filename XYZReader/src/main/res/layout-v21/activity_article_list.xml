@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="?colorPrimary"
+            android:elevation="@dimen/dimen_4dp"
             app:layout_collapseMode="pin"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -55,8 +56,8 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/top_bottom_recycler_view"
-            android:paddingBottom="@dimen/top_bottom_recycler_view"
+            android:paddingTop="@dimen/dimen_4dp"
+            android:paddingBottom="@dimen/dimen_4dp"
             android:paddingStart="@dimen/exterior_recycler_view"
             android:paddingEnd="@dimen/exterior_recycler_view"
             android:clipToPadding="false"
